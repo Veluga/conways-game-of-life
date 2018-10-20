@@ -1,14 +1,20 @@
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class GameOfLife {
     public static void main(String[] args){
-        boolean[][] world = genWorld(10);
+        boolean[][] world = genWorld(50);
         Scanner s = new Scanner(System.in);
 
         printWorld(world);
-        while(s.nextLine().length() == 0) {
+        while(true) {
             world = nextGen(world);
             printWorld(world);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch(InterruptedException ex) {
+                System.out.println(ex);
+            }
         }
     };
 
@@ -26,6 +32,7 @@ public class GameOfLife {
             }
             System.out.println();
         }
+        System.out.println();
     };
 
     private static boolean[][] genWorld(int dimension) {
@@ -53,7 +60,7 @@ public class GameOfLife {
                 newWorld[r][c] = survivesThisGen(world[r][c], num);
             }
         }
-        return world;
+        return newWorld;
     };
 
     private static int numNeighbors(boolean[][] world, int r, int c) {
@@ -62,7 +69,7 @@ public class GameOfLife {
         int dimension = world.length;
 
         for(int i = r-1; i <= r+1; i++) {
-            for(int j = c-1; j <= j+1; j++) {
+            for(int j = c-1; j <= c+1; j++) {
                 if(indexInBounds(dimension, i, j) && world[i][j]) {
                     num++;
                 }
